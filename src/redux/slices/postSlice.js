@@ -1,6 +1,6 @@
 import { createSlice, current } from "@reduxjs/toolkit";
-import formatCurrency from "../../components/FormatCurrency";
-import { GetBasketTotal } from "../../App";
+// import formatCurrency from "../../components/FormatCurrency";
+// import { GetBasketTotal } from "../../App";
 const postSlice = createSlice({
   name: "post",
   initialState: {

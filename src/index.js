@@ -5,18 +5,30 @@ import App from "./App";
 import { BrowserRouter } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import { Provider } from "react-redux";
-import Store from "./redux/Store";
+// import Store from "./redux/Store";
+import { configureStore } from "@reduxjs/toolkit";
+import GlobalStyles from "./styles/GlobelStyle";
+
+// const store = configureStore({
+//   reducer: {},
+// });
 
 // import "bootstrap/dist/css/bootstrap.min.css";
 // import "bootstrap/dist/js/bootstrap.js";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <React.StrictMode>
-    <BrowserRouter>
-      <Provider store={Store}>
-        <App />
-      </Provider>
-    </BrowserRouter>
-  </React.StrictMode>
+  // <React.StrictMode>
+  //   <BrowserRouter>
+  //     <Provider store={Store}>
+  //       <App />
+  //     </Provider>
+  //   </BrowserRouter>
+  // </React.StrictMode>
+  // <Provider store={store}>
+  <BrowserRouter>
+    <GlobalStyles />
+    <App />
+  </BrowserRouter>
+  // </Provider>
 );
