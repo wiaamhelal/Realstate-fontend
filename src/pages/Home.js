@@ -10,51 +10,52 @@ import {
   FiHome,
   FiUsers,
 } from "react-icons/fi";
-import api from "../utils/request";
+// import api from "../utils/request";
 import Navbar from "../componets/layout/Navbar";
 import PropertyCard from "../componets/proporties/PropertyCard";
+import request from "../utils/request";
 
-const properties = [
-  {
-    id: "property-1",
-    title: "Modern Apartment with Marina Views",
-    price: 1850000,
-    purpose: "sale",
-    location: "Dubai Marina, Dubai",
-    bedrooms: 2,
-    bathrooms: 2,
-    area: 1240,
-    featured: true,
-    image:
-      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1000&q=85",
-  },
-  {
-    id: "property-2",
-    title: "Contemporary Luxury Villa",
-    price: 420000,
-    purpose: "rent",
-    location: "Arabian Ranches, Dubai",
-    bedrooms: 4,
-    bathrooms: 5,
-    area: 3400,
-    featured: true,
-    image:
-      "https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=1000&q=85",
-  },
-  {
-    id: "property-3",
-    title: "Elegant Downtown Residence",
-    price: 2750000,
-    purpose: "sale",
-    location: "Downtown Dubai, Dubai",
-    bedrooms: 2,
-    bathrooms: 3,
-    area: 1580,
-    featured: true,
-    image:
-      "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1000&q=85",
-  },
-];
+// const properties = [
+//   {
+//     id: "property-1",
+//     title: "Modern Apartment with Marina Views",
+//     price: 1850000,
+//     purpose: "sale",
+//     location: "Dubai Marina, Dubai",
+//     bedrooms: 2,
+//     bathrooms: 2,
+//     area: 1240,
+//     featured: true,
+//     image:
+//       "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1000&q=85",
+//   },
+//   {
+//     id: "property-2",
+//     title: "Contemporary Luxury Villa",
+//     price: 420000,
+//     purpose: "rent",
+//     location: "Arabian Ranches, Dubai",
+//     bedrooms: 4,
+//     bathrooms: 5,
+//     area: 3400,
+//     featured: true,
+//     image:
+//       "https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=1000&q=85",
+//   },
+//   {
+//     id: "property-3",
+//     title: "Elegant Downtown Residence",
+//     price: 2750000,
+//     purpose: "sale",
+//     location: "Downtown Dubai, Dubai",
+//     bedrooms: 2,
+//     bathrooms: 3,
+//     area: 1580,
+//     featured: true,
+//     image:
+//       "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1000&q=85",
+//   },
+// ];
 
 const locations = [
   {
@@ -579,16 +580,24 @@ function Home() {
         setFeaturedLoading(true);
         setFeaturedError("");
 
-        const response = await api.get("/properties", {
+        // const response = await request.get("properties", {
+        //   params: {
+        //     featured: true,
+        //     status: "available",
+        //     limit: 3,
+        //     page: 1,
+        //     sort: "newest",
+        //   },
+        // });
+        // console.log("API response:", response.data);
+        const response = await request.get("properties", {
           params: {
-            featured: true,
-            status: "available",
-            limit: 3,
             page: 1,
-            sort: "newest",
+            limit: 3,
           },
         });
 
+        console.log("API response:", response.data);
         const data = response.data;
 
         const properties = Array.isArray(data)
@@ -715,6 +724,19 @@ function Home() {
               {featuredProperties.map((property) => (
                 <PropertyCard key={property.id} property={property} />
               ))}
+              {/* {featuredLoading ? (
+                <p>Loading featured properties...</p>
+              ) : featuredError ? (
+                <p>{featuredError}</p>
+              ) : featuredProperties.length > 0 ? (
+                <PropertyGrid>
+                  {featuredProperties.map((property) => (
+                    <PropertyCard key={property._id} property={property} />
+                  ))}
+                </PropertyGrid>
+              ) : (
+                <p>No featured properties available yet.</p>
+              )} */}
             </PropertyGrid>
 
             <Benefits>

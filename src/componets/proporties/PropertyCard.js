@@ -173,7 +173,7 @@ function PropertyCard({ property }) {
     title,
     price,
     purpose,
-    location,
+    // location,
     bedrooms,
     bathrooms,
     area,
@@ -213,7 +213,9 @@ function PropertyCard({ property }) {
 
         <Location>
           <FiMapPin size={15} />
-          {location}
+          {[property.location?.area, property.location?.city]
+            .filter(Boolean)
+            .join(", ") || "Location unavailable"}
         </Location>
 
         <Divider />
