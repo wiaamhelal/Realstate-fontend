@@ -167,28 +167,43 @@ const DetailsLink = styled(Link)`
   }
 `;
 
+// function PropertyCard({ property }) {
+//   const {
+//     id,
+//     title,
+//     price,
+//     purpose,
+//     // location,
+//     bedrooms,
+//     bathrooms,
+//     area,
+//     image,
+//     featured,
+//   } = property;
+//   console.log(property);
+//   const formattedPrice = new Intl.NumberFormat("en-AE", {
+//     maximumFractionDigits: 0,
+//   }).format(price);
+
 function PropertyCard({ property }) {
-  const {
-    id,
-    title,
-    price,
-    purpose,
-    // location,
-    bedrooms,
-    bathrooms,
-    area,
-    image,
-    featured,
-  } = property;
+  const { _id, title, price, purpose, bedrooms, bathrooms, area, featured } =
+    property;
+
+  const propertyId = _id || property.id;
 
   const formattedPrice = new Intl.NumberFormat("en-AE", {
     maximumFractionDigits: 0,
-  }).format(price);
+  }).format(price || 0);
 
   return (
     <Card>
       <ImageWrapper>
-        <img src={image} alt={title} loading="lazy" />
+        {/* <img src={property?.images[0]?.url} alt={title} loading="lazy" /> */}
+        <img
+          src={property?.images?.[0]?.url || "/images/property-placeholder.jpg"}
+          alt={title || "Property"}
+          loading="lazy"
+        />
 
         <Badge>{featured ? "Featured" : purpose}</Badge>
 
@@ -209,7 +224,8 @@ function PropertyCard({ property }) {
           {purpose === "rent" && <span> / year</span>}
         </Price>
 
-        <PropertyTitle to={`/properties/${id}`}>{title}</PropertyTitle>
+        {/* <PropertyTitle to={`/properties/${id}`}>{title}</PropertyTitle> */}
+        <PropertyTitle to={`/properties/${propertyId}`}>{title}</PropertyTitle>
 
         <Location>
           <FiMapPin size={15} />
@@ -232,7 +248,10 @@ function PropertyCard({ property }) {
           </span>
         </Features>
 
-        <DetailsLink to={`/properties/${id}`}>
+        {/* <DetailsLink to={`/properties/${id}`}>
+          View Details <FiArrowUpRight />
+        </DetailsLink> */}
+        <DetailsLink to={`/properties/${propertyId}`}>
           View Details <FiArrowUpRight />
         </DetailsLink>
       </Content>

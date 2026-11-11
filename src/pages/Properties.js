@@ -388,20 +388,21 @@ function PropertyListingCard({ property }) {
       .join(", ") || "Dubai, UAE";
 
   return (
-    <PropertyCard
-      property={{
-        id: property._id || property.id,
-        title: property.title || "Untitled property",
-        price: Number(property.price) || 0,
-        purpose: property.purpose || "sale",
-        location,
-        bedrooms: property.bedrooms ?? 0,
-        bathrooms: property.bathrooms ?? 0,
-        area: property.area ?? 0,
-        image,
-        featured: Boolean(property.featured),
-      }}
-    />
+    // <PropertyCard
+    //   property={{
+    //     id: property._id || property.id,
+    //     title: property.title || "Untitled property",
+    //     price: Number(property.price) || 0,
+    //     purpose: property.purpose || "sale",
+    //     location,
+    //     bedrooms: property.bedrooms ?? 0,
+    //     bathrooms: property.bathrooms ?? 0,
+    //     area: property.area ?? 0,
+    //     image,
+    //     featured: Boolean(property.featured),
+    //   }}
+    // />
+    <PropertyCard key={property.id} property={property} />
   );
 }
 
