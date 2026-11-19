@@ -1,10 +1,17 @@
 import styled from "styled-components";
 import { Link } from "react-router-dom";
+// import {
+//   FiHeart,
+//   FiMapPin,
+//   FiBed,
+//   FiBath,
+//   FiMaximize2,
+//   FiArrowUpRight,
+// } from "react-icons/fi";
 import {
   FiHeart,
   FiMapPin,
-  FiBed,
-  FiBath,
+  FiHome,
   FiMaximize2,
   FiArrowUpRight,
 } from "react-icons/fi";
@@ -167,24 +174,6 @@ const DetailsLink = styled(Link)`
   }
 `;
 
-// function PropertyCard({ property }) {
-//   const {
-//     id,
-//     title,
-//     price,
-//     purpose,
-//     // location,
-//     bedrooms,
-//     bathrooms,
-//     area,
-//     image,
-//     featured,
-//   } = property;
-//   console.log(property);
-//   const formattedPrice = new Intl.NumberFormat("en-AE", {
-//     maximumFractionDigits: 0,
-//   }).format(price);
-
 function PropertyCard({ property }) {
   const { _id, title, price, purpose, bedrooms, bathrooms, area, featured } =
     property;
@@ -236,15 +225,37 @@ function PropertyCard({ property }) {
 
         <Divider />
 
-        <Features>
-          {/* <span>
+        {/* <Features>
+          <span>
             <FiBed /> {bedrooms} Beds
           </span>
           <span>
             <FiBath /> {bathrooms} Baths
-          </span> */}
+          </span>
           <span>
             <FiMaximize2 /> {area} sqft
+          </span>
+        </Features> */}
+        {/* <Features>
+          <span>
+            <FiBed /> {bedrooms ?? 0} Beds
+          </span>
+
+          <span>
+            <FiBath /> {bathrooms ?? 0} Baths
+          </span>
+
+          <span>
+            <FiMaximize2 /> {area ?? 0} sqft
+          </span>
+        </Features> */}
+        <Features>
+          <span>
+            <FiHome /> {bedrooms ?? 0} Beds
+          </span>
+
+          <span>
+            <FiMaximize2 /> {area ?? 0} sqft
           </span>
         </Features>
 

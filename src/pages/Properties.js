@@ -371,41 +371,43 @@ function normalizePropertiesResponse(responseData) {
   };
 }
 
+// function PropertyListingCard({ property }) {
+//   const images = Array.isArray(property.images) ? property.images : [];
+
+//   const image =
+//     images[0]?.url ||
+//     property.image ||
+//     "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1000&q=80";
+
+//   const location =
+//     [
+//       property.location?.area || property.areaName,
+//       property.location?.city || property.city,
+//     ]
+//       .filter(Boolean)
+//       .join(", ") || "Dubai, UAE";
+
+//   return (
+//     // <PropertyCard
+//     //   property={{
+//     //     id: property._id || property.id,
+//     //     title: property.title || "Untitled property",
+//     //     price: Number(property.price) || 0,
+//     //     purpose: property.purpose || "sale",
+//     //     location,
+//     //     bedrooms: property.bedrooms ?? 0,
+//     //     bathrooms: property.bathrooms ?? 0,
+//     //     area: property.area ?? 0,
+//     //     image,
+//     //     featured: Boolean(property.featured),
+//     //   }}
+//     // />
+//     <PropertyCard key={property.id} property={property} />
+//   );
+// }
 function PropertyListingCard({ property }) {
-  const images = Array.isArray(property.images) ? property.images : [];
-
-  const image =
-    images[0]?.url ||
-    property.image ||
-    "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1000&q=80";
-
-  const location =
-    [
-      property.location?.area || property.areaName,
-      property.location?.city || property.city,
-    ]
-      .filter(Boolean)
-      .join(", ") || "Dubai, UAE";
-
-  return (
-    // <PropertyCard
-    //   property={{
-    //     id: property._id || property.id,
-    //     title: property.title || "Untitled property",
-    //     price: Number(property.price) || 0,
-    //     purpose: property.purpose || "sale",
-    //     location,
-    //     bedrooms: property.bedrooms ?? 0,
-    //     bathrooms: property.bathrooms ?? 0,
-    //     area: property.area ?? 0,
-    //     image,
-    //     featured: Boolean(property.featured),
-    //   }}
-    // />
-    <PropertyCard key={property.id} property={property} />
-  );
+  return <PropertyCard property={property} />;
 }
-
 function Properties() {
   const [searchParams, setSearchParams] = useSearchParams();
 
