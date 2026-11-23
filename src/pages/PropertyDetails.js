@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import styled from "styled-components";
+import PropertyCard from "../componets/proporties/PropertyCard";
 import {
   FiArrowLeft,
   FiMapPin,
-  FiBed,
-  FiBath,
   FiMaximize2,
   FiHeart,
   FiShare2,
@@ -22,6 +21,52 @@ import {
 
 import api from "../utils/request";
 import Navbar from "../componets/layout/Navbar";
+
+const RelatedSection = styled.section`
+  margin-top: 55px;
+  padding-top: 35px;
+  border-top: 1px solid #e9e8e1;
+`;
+
+const RelatedHeader = styled.div`
+  margin-bottom: 25px;
+
+  h2 {
+    color: #20372b;
+    font-size: 25px;
+    letter-spacing: -0.5px;
+  }
+
+  p {
+    margin-top: 8px;
+    color: #858981;
+    font-size: 13px;
+    line-height: 1.7;
+  }
+`;
+
+const RelatedGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
+
+  @media (max-width: 900px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @media (max-width: 580px) {
+    grid-template-columns: 1fr;
+  }
+`;
+
+const RelatedMessage = styled.p`
+  padding: 25px;
+  border-radius: 9px;
+  background: #fff;
+  color: #858981;
+  font-size: 13px;
+  text-align: center;
+`;
 
 const Page = styled.main`
   min-height: 100vh;
@@ -123,7 +168,13 @@ const HeaderActions = styled.div`
   button:hover {
     border-color: #b89564;
   }
-
+  @media (max-width: 650px) {
+    width: 100%;
+    button {
+      flex: 1;
+      min-width: 0;
+    }
+  }
   @media (max-width: 400px) {
     button {
       padding: 0 10px;
@@ -174,11 +225,38 @@ const Gallery = styled.div`
     color: white;
     font-size: 12px;
   }
+  &.gallery-1 {
+    grid-template-columns: 1fr;
+    grid-template-rows: 420px;
+  }
 
+  &.gallery-1 .gallery-image:first-child {
+    grid-row: auto;
+    grid-column: auto;
+  }
+
+  &.gallery-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: 320px;
+  }
+
+  &.gallery-2 .gallery-image:first-child {
+    grid-row: auto;
+  }
   @media (max-width: 750px) {
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 270px 135px;
+    &.gallery-1 {
+      grid-template-rows: 260px;
+    }
 
+    &.gallery-2 {
+      grid-template-rows: 190px;
+    }
+
+    &.gallery-2 .gallery-image:first-child {
+      grid-column: auto;
+    }
     .gallery-image:first-child {
       grid-column: 1 / 3;
       grid-row: auto;
@@ -231,6 +309,9 @@ const Panel = styled.section`
 
   @media (max-width: 500px) {
     padding: 20px;
+  }
+  @media (max-width: 400px) {
+    padding: 16px;
   }
 `;
 
@@ -319,6 +400,9 @@ const ContactCard = styled.div`
   border-radius: 12px;
   background: #fff;
   box-shadow: 0 10px 30px rgba(27, 49, 36, 0.04);
+  @media (max-width: 400px) {
+    padding: 18px;
+  }
 `;
 
 const Price = styled.div`
@@ -451,24 +535,95 @@ const Lightbox = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 25px;
-  background: rgba(8, 17, 12, 0.94);
+  padding: 55px 70px;
+  background: rgba(8, 17, 12, 0.96);
 
   img {
     max-width: 100%;
-    max-height: 85vh;
+    max-height: 82vh;
     object-fit: contain;
+    border-radius: 5px;
   }
 
   button {
     position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    background: rgba(255, 255, 255, 0.08);
+    color: white;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  button:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  .close-button {
     top: 20px;
     right: 25px;
-    padding: 10px 14px;
-    border: 1px solid rgba(255, 255, 255, 0.35);
+    width: 42px;
+    height: 42px;
     border-radius: 7px;
-    background: transparent;
+    font-size: 20px;
+  }
+
+  .nav-button {
+    top: 50%;
+    transform: translateY(-50%);
+    width: 46px;
+    height: 55px;
+    border-radius: 7px;
+    font-size: 23px;
+  }
+
+  .previous {
+    left: 20px;
+  }
+
+  .next {
+    right: 20px;
+  }
+
+  .image-counter {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
     color: white;
+    font-size: 13px;
+    background: rgba(0, 0, 0, 0.4);
+    padding: 8px 14px;
+    border-radius: 20px;
+  }
+
+  @media (max-width: 600px) {
+    padding: 55px 12px;
+
+    img {
+      max-height: 75vh;
+    }
+
+    .nav-button {
+      width: 36px;
+      height: 45px;
+      font-size: 18px;
+    }
+
+    .previous {
+      left: 8px;
+    }
+
+    .next {
+      right: 8px;
+    }
+
+    .close-button {
+      top: 12px;
+      right: 12px;
+    }
   }
 `;
 
@@ -485,8 +640,66 @@ function PropertyDetails() {
   const [property, setProperty] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [activeImage, setActiveImage] = useState(null);
+  const [activeImageIndex, setActiveImageIndex] = useState(null);
   const [saved, setSaved] = useState(false);
+  const [favoriteLoading, setFavoriteLoading] = useState(false);
+  const [favoriteError, setFavoriteError] = useState("");
+  const [relatedProperties, setRelatedProperties] = useState([]);
+  const [relatedLoading, setRelatedLoading] = useState(false);
+
+  useEffect(() => {
+    if (!id) return;
+
+    let isMounted = true;
+
+    const checkFavorite = async () => {
+      try {
+        const response = await api.get(`/favorites/${id}`);
+
+        if (isMounted) {
+          setSaved(response.data.isFavorite);
+        }
+      } catch (error) {
+        if (isMounted && error.response?.status !== 401) {
+          console.error("Unable to check favorite:", error);
+        }
+      }
+    };
+
+    checkFavorite();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [id]);
+
+  const handleFavorite = async () => {
+    if (favoriteLoading) return;
+
+    setFavoriteLoading(true);
+    setFavoriteError("");
+
+    try {
+      if (saved) {
+        await api.delete(`/favorites/${id}`);
+        setSaved(false);
+      } else {
+        await api.post(`/favorites/${id}`);
+        setSaved(true);
+      }
+    } catch (error) {
+      if (error.response?.status === 401) {
+        setFavoriteError("Please log in to save properties.");
+      } else {
+        setFavoriteError(
+          error.response?.data?.message ||
+            "Unable to update favorites. Please try again."
+        );
+      }
+    } finally {
+      setFavoriteLoading(false);
+    }
+  };
 
   useEffect(() => {
     const controller = new AbortController();
@@ -495,7 +708,7 @@ function PropertyDetails() {
       setLoading(true);
       setError("");
       setProperty(null);
-      setActiveImage(null);
+      setActiveImageIndex(null);
 
       try {
         const response = await api.get(`/properties/${id}`, {
@@ -534,6 +747,71 @@ function PropertyDetails() {
     return () => controller.abort();
   }, [id]);
 
+  useEffect(() => {
+    if (
+      !property?.propertyType ||
+      !property?.purpose ||
+      !property?.location?.city
+    ) {
+      setRelatedProperties([]);
+      setRelatedLoading(false);
+      return;
+    }
+
+    const controller = new AbortController();
+
+    const fetchRelatedProperties = async () => {
+      try {
+        setRelatedLoading(true);
+
+        const response = await api.get("/properties", {
+          params: {
+            propertyType: property.propertyType,
+            purpose: property.purpose,
+            city: property.location.city,
+            page: 1,
+            limit: 10,
+            sort: "newest",
+          },
+          signal: controller.signal,
+        });
+
+        const data = response.data;
+
+        const properties = Array.isArray(data)
+          ? data
+          : Array.isArray(data?.data?.properties)
+          ? data.data.properties
+          : Array.isArray(data?.properties)
+          ? data.properties
+          : Array.isArray(data?.data)
+          ? data.data
+          : [];
+
+        const currentPropertyId = String(property._id || property.id);
+
+        const filteredProperties = properties
+          .filter((item) => String(item._id || item.id) !== currentPropertyId)
+          .slice(0, 4);
+
+        setRelatedProperties(filteredProperties);
+      } catch (error) {
+        if (error.code !== "ERR_CANCELED") {
+          console.error("Failed to load related properties:", error);
+          setRelatedProperties([]);
+        }
+      } finally {
+        if (!controller.signal.aborted) {
+          setRelatedLoading(false);
+        }
+      }
+    };
+
+    fetchRelatedProperties();
+
+    return () => controller.abort();
+  }, [property]);
+
   const images = (property?.images || [])
     .map((item) => (typeof item === "string" ? item : item?.url))
     .filter(Boolean);
@@ -543,6 +821,40 @@ function PropertyDetails() {
     "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=85";
 
   const galleryImages = images.length ? images : [fallbackImage];
+
+  const showNextImage = () => {
+    setActiveImageIndex((current) => (current + 1) % galleryImages.length);
+  };
+
+  const showPreviousImage = () => {
+    setActiveImageIndex(
+      (current) => (current - 1 + galleryImages.length) % galleryImages.length
+    );
+  };
+
+  useEffect(() => {
+    if (activeImageIndex === null) return;
+
+    const handleKeyDown = (event) => {
+      if (event.key === "ArrowRight") {
+        showNextImage();
+      }
+
+      if (event.key === "ArrowLeft") {
+        showPreviousImage();
+      }
+
+      if (event.key === "Escape") {
+        setActiveImageIndex(null);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [activeImageIndex, galleryImages.length]);
 
   const location = [
     property?.location?.address,
@@ -652,7 +964,7 @@ function PropertyDetails() {
                 <FiShare2 /> Share
               </button>
 
-              <button
+              {/* <button
                 type="button"
                 aria-pressed={saved}
                 onClick={() => setSaved((previous) => !previous)}
@@ -662,17 +974,30 @@ function PropertyDetails() {
                   fill={saved ? "#b34e4e" : "none"}
                 />
                 {saved ? "Saved" : "Save"}
+              </button> */}
+              <button
+                type="button"
+                aria-pressed={saved}
+                disabled={favoriteLoading}
+                onClick={handleFavorite}
+              >
+                <FiHeart
+                  color={saved ? "#b34e4e" : "currentColor"}
+                  fill={saved ? "#b34e4e" : "none"}
+                />
+                {favoriteLoading ? "Saving..." : saved ? "Saved" : "Save"}
               </button>
             </HeaderActions>
+            {favoriteError && <p>{favoriteError}</p>}
           </Header>
 
-          <Gallery>
+          <Gallery className={`gallery-${Math.min(galleryImages.length, 3)}`}>
             {galleryImages.slice(0, 3).map((image, index) => (
               <button
                 className="gallery-image"
                 type="button"
                 key={`${image}-${index}`}
-                onClick={() => setActiveImage(image)}
+                onClick={() => setActiveImageIndex(index)}
                 aria-label={`View property image ${index + 1}`}
               >
                 <img
@@ -688,9 +1013,9 @@ function PropertyDetails() {
               </button>
             ))}
 
-            {galleryImages.length < 2 && (
+            {/* {galleryImages.length < 2 && (
               <NoImages>More property photos coming soon</NoImages>
-            )}
+            )} */}
           </Gallery>
 
           <MainLayout>
@@ -860,10 +1185,31 @@ function PropertyDetails() {
               </ContactCard>
             </SideColumn>
           </MainLayout>
+          {(relatedLoading || relatedProperties.length > 0) && (
+            <RelatedSection>
+              <RelatedHeader>
+                <h2>Related Properties</h2>
+                <p>Explore similar properties in the same location.</p>
+              </RelatedHeader>
+
+              {relatedLoading ? (
+                <RelatedMessage>Loading related properties...</RelatedMessage>
+              ) : (
+                <RelatedGrid>
+                  {relatedProperties.map((relatedProperty) => (
+                    <PropertyCard
+                      key={relatedProperty._id || relatedProperty.id}
+                      property={relatedProperty}
+                    />
+                  ))}
+                </RelatedGrid>
+              )}
+            </RelatedSection>
+          )}
         </Container>
       </Page>
 
-      {activeImage && (
+      {/* {activeImage && (
         <Lightbox
           role="dialog"
           aria-modal="true"
@@ -879,6 +1225,61 @@ function PropertyDetails() {
             alt={property.title}
             onClick={(event) => event.stopPropagation()}
           />
+        </Lightbox>
+      )} */}
+      {activeImageIndex !== null && (
+        <Lightbox
+          role="dialog"
+          aria-modal="true"
+          aria-label="Property image viewer"
+          onClick={() => setActiveImageIndex(null)}
+        >
+          <button
+            className="close-button"
+            type="button"
+            onClick={() => setActiveImageIndex(null)}
+            aria-label="Close gallery"
+          >
+            ✕
+          </button>
+
+          {galleryImages.length > 1 && (
+            <>
+              <button
+                className="nav-button previous"
+                type="button"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  showPreviousImage();
+                }}
+                aria-label="Previous image"
+              >
+                &#10094;
+              </button>
+
+              <button
+                className="nav-button next"
+                type="button"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  showNextImage();
+                }}
+                aria-label="Next image"
+              >
+                &#10095;
+              </button>
+            </>
+          )}
+
+          <img
+            src={galleryImages[activeImageIndex]}
+            alt={`${property.title} - image ${activeImageIndex + 1}`}
+            onClick={(event) => event.stopPropagation()}
+          />
+
+          <span className="image-counter">
+            {activeImageIndex + 1} / {galleryImages.length}
+          </span>
         </Lightbox>
       )}
     </>

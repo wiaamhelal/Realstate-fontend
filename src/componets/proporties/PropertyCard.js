@@ -1,13 +1,5 @@
 import styled from "styled-components";
 import { Link } from "react-router-dom";
-// import {
-//   FiHeart,
-//   FiMapPin,
-//   FiBed,
-//   FiBath,
-//   FiMaximize2,
-//   FiArrowUpRight,
-// } from "react-icons/fi";
 import {
   FiHeart,
   FiMapPin,
@@ -174,7 +166,13 @@ const DetailsLink = styled(Link)`
   }
 `;
 
-function PropertyCard({ property }) {
+// function PropertyCard({ property }) {
+function PropertyCard({
+  property,
+  isFavorite = false,
+  onFavorite,
+  favoriteLoading = false,
+}) {
   const { _id, title, price, purpose, bedrooms, bathrooms, area, featured } =
     property;
 
@@ -187,7 +185,6 @@ function PropertyCard({ property }) {
   return (
     <Card>
       <ImageWrapper>
-        {/* <img src={property?.images[0]?.url} alt={title} loading="lazy" /> */}
         <img
           src={property?.images?.[0]?.url || "/images/property-placeholder.jpg"}
           alt={title || "Property"}
@@ -196,7 +193,7 @@ function PropertyCard({ property }) {
 
         <Badge>{featured ? "Featured" : purpose}</Badge>
 
-        <FavoriteButton
+        {/* <FavoriteButton
           type="button"
           aria-label="Add to favorites"
           onClick={() => {
@@ -204,6 +201,24 @@ function PropertyCard({ property }) {
           }}
         >
           <FiHeart />
+        </FavoriteButton> */}
+        <FavoriteButton
+          type="button"
+          aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
+          aria-pressed={isFavorite}
+          disabled={favoriteLoading}
+          onClick={(event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            onFavorite?.(propertyId);
+          }}
+          style={{
+            color: isFavorite ? "#b89564" : "#263b31",
+            opacity: favoriteLoading ? 0.6 : 1,
+            cursor: favoriteLoading ? "not-allowed" : "pointer",
+          }}
+        >
+          <FiHeart fill={isFavorite ? "#b89564" : "none"} />
         </FavoriteButton>
       </ImageWrapper>
 
@@ -212,8 +227,6 @@ function PropertyCard({ property }) {
           AED {formattedPrice}
           {purpose === "rent" && <span> / year</span>}
         </Price>
-
-        {/* <PropertyTitle to={`/properties/${id}`}>{title}</PropertyTitle> */}
         <PropertyTitle to={`/properties/${propertyId}`}>{title}</PropertyTitle>
 
         <Location>
@@ -224,31 +237,6 @@ function PropertyCard({ property }) {
         </Location>
 
         <Divider />
-
-        {/* <Features>
-          <span>
-            <FiBed /> {bedrooms} Beds
-          </span>
-          <span>
-            <FiBath /> {bathrooms} Baths
-          </span>
-          <span>
-            <FiMaximize2 /> {area} sqft
-          </span>
-        </Features> */}
-        {/* <Features>
-          <span>
-            <FiBed /> {bedrooms ?? 0} Beds
-          </span>
-
-          <span>
-            <FiBath /> {bathrooms ?? 0} Baths
-          </span>
-
-          <span>
-            <FiMaximize2 /> {area ?? 0} sqft
-          </span>
-        </Features> */}
         <Features>
           <span>
             <FiHome /> {bedrooms ?? 0} Beds
@@ -258,10 +246,6 @@ function PropertyCard({ property }) {
             <FiMaximize2 /> {area ?? 0} sqft
           </span>
         </Features>
-
-        {/* <DetailsLink to={`/properties/${id}`}>
-          View Details <FiArrowUpRight />
-        </DetailsLink> */}
         <DetailsLink to={`/properties/${propertyId}`}>
           View Details <FiArrowUpRight />
         </DetailsLink>

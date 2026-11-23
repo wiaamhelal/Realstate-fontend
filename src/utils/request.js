@@ -13,11 +13,11 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://localhost:8000/api",
+  baseURL: "https://realstate-backend-zxqd.onrender.com/api",
   withCredentials: true,
 });
 
+//http://localhost:8000/api
 //
-//https://realstate-backend-zxqd.onrender.com/api
 
 export default api;

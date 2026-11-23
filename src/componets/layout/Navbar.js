@@ -6,6 +6,35 @@ import { useAuth } from "../../context/AuthContext";
 import { FiUser, FiChevronDown, FiLogOut } from "react-icons/fi";
 import { logoutUser } from "../../store/authSlice";
 import { useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
+import { FiHeart } from "react-icons/fi";
+import api from "../../utils/request";
+
+const FavoritesLink = styled(Link)`
+  display: flex;
+  align-items: center;
+  gap: 7px;
+
+  svg {
+    color: #b89564;
+    font-size: 16px;
+  }
+`;
+
+const FavoritesCount = styled.span`
+  min-width: 19px;
+  height: 19px;
+  padding: 0 5px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 20px;
+  background: #b89564;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+`;
 
 const NavbarWrapper = styled.header`
   width: 100%;
@@ -257,8 +286,51 @@ function Navbar() {
   const dispatch = useDispatch();
   const [menuOpen, setMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
-
   const { user, authLoading, logout } = useAuth();
+
+  const location = useLocation();
+  const [favoritesCount, setFavoritesCount] = useState(0);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const fetchFavoritesCount = async () => {
+      if (authLoading) return;
+
+      if (!user) {
+        setFavoritesCount(0);
+        return;
+      }
+
+      try {
+        const response = await api.get("/favorites", {
+          params: { page: 1, limit: 1 },
+        });
+
+        if (isMounted) {
+          setFavoritesCount(response.data?.data?.pagination?.total || 0);
+        }
+      } catch (error) {
+        if (isMounted && error.response?.status === 401) {
+          setFavoritesCount(0);
+        }
+      }
+    };
+
+    fetchFavoritesCount();
+
+    const handleFavoritesUpdate = () => {
+      fetchFavoritesCount();
+    };
+
+    window.addEventListener("favorites-updated", handleFavoritesUpdate);
+
+    return () => {
+      isMounted = false;
+      window.removeEventListener("favorites-updated", handleFavoritesUpdate);
+    };
+  }, [user, authLoading, location.pathname]);
+
   const closeMenu = () => setMenuOpen(false);
   return (
     <NavbarWrapper>
@@ -274,6 +346,17 @@ function Navbar() {
           <Link to="/properties" onClick={closeMenu}>
             Properties
           </Link>
+          {user && (
+            <FavoritesLink to="/favorites" onClick={closeMenu}>
+              <FiHeart />
+              Favorites
+              {favoritesCount > 0 && (
+                <FavoritesCount>
+                  {favoritesCount > 99 ? "99+" : favoritesCount}
+                </FavoritesCount>
+              )}
+            </FavoritesLink>
+          )}
           <Link to="/properties?purpose=rent" onClick={closeMenu}>
             Rent
           </Link>
@@ -286,29 +369,6 @@ function Navbar() {
         </NavLinks>
 
         <Actions>
-          {/* <Link className="login" to="/login">
-            Log in
-          </Link> */}
-
-          {/* {!authLoading &&
-            (user ? (
-              <div>
-                <span>{user.name || user.username || user.email}</span>
-                <button
-                  type="button"
-                  onClick={() => {
-                    // سنضيف تسجيل الخروج الفعلي بعد مراجعة الـ Backend.
-                  }}
-                >
-                  Logout
-                </button>
-              </div>
-            ) : (
-              <Link className="login" to="/login">
-                Log in
-              </Link>
-            ))} */}
-
           {!authLoading &&
             (user ? (
               <UserMenuWrapper>
@@ -338,8 +398,6 @@ function Navbar() {
                   <UserDropdown>
                     <DropdownItem
                       type="button"
-                      // onClick={() => dispatch(logoutUser)}
-
                       onClick={async () => {
                         try {
                           logout();

@@ -1,5 +1,4 @@
 import { Routes, Route } from "react-router-dom";
-
 import Home from "./pages/Home";
 import Properties from "./pages/Properties";
 import PropertyDetails from "./pages/PropertyDetails";
@@ -7,29 +6,7 @@ import Login from "./pages/Login";
 import AddProperty from "./pages/AddProperty";
 import ProtectedRoute from "./componets/auth/ProtectedRoute";
 import Register from "./pages/Register";
-
-function ComingSoon() {
-  return (
-    <main
-      style={{
-        minHeight: "70vh",
-        display: "grid",
-        placeItems: "center",
-        padding: "30px",
-        textAlign: "center",
-      }}
-    >
-      <div>
-        <h1 style={{ color: "#173c32", marginBottom: "12px" }}>Coming soon</h1>
-
-        <p style={{ color: "#858981" }}>
-          This page will be available in the next development step.
-        </p>
-      </div>
-    </main>
-  );
-}
-
+import Favorites from "./pages/Favorites";
 function App() {
   return (
     <Routes>
@@ -41,15 +18,6 @@ function App() {
 
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
-
-      {/* <Route
-        path="/add-property"
-        element={
-          <ProtectedRoute>
-            <ComingSoon />
-          </ProtectedRoute>
-        }
-      /> */}
       <Route
         path="/add-property"
         element={
@@ -58,8 +26,14 @@ function App() {
           </ProtectedRoute>
         }
       />
-
-      <Route path="*" element={<ComingSoon />} />
+      <Route
+        path="/favorites"
+        element={
+          <ProtectedRoute>
+            <Favorites />
+          </ProtectedRoute>
+        }
+      />
     </Routes>
   );
 }
